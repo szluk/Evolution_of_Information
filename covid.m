@@ -95,7 +95,7 @@ H
 figure
 plot(dat, H, '-rs')
 xlabel('time (in days after Wuhan outbreak)')
-ylabel('Shannon entropy')
+ylabel('Shannon entropy (in bits)')
 
 figure
 plot(dat, nmut, '-gs')
