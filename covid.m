@@ -4,8 +4,6 @@ clear all
 % It clearly demonstartes the evolution of information that takes place since Big-Bang. 
 % Based on the second law of information dynamics disclosed in
 % https://aip.scitation.org/doi/10.1063/5.0100358
-% and the mass-information equivalence disclosed in 
-% https://arxiv.org/abs/1805.05774v9
 
 % SARS-CoV-2 complete genome sequences available at:
 % https://www.ncbi.nlm.nih.gov/nuccore/MN908947
