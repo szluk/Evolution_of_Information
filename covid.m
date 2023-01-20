@@ -61,7 +61,7 @@ dat = zeros(1,length(covgnm)); % sequence collection date
 for j=1:length(covgnm)
   for k=1:length(covgnm{1})
     if    covgnm{j}(k) == 'N'
-      covgnm{j}(k) = covgnm{1}(k); % replace nondetermined base with the base sequence 
+      covgnm{j}(k) = covgnm{1}(k); % replace nondetermined base with the base of the initial Wuhan sequence 
     end
 
     if    covgnm{j}(k) == 'A'
