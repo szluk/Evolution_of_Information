@@ -1,158 +1,178 @@
 clear all
 
-% Matlab script to populate calculate chemical elements' entropy following Hund and Aufbau rule.
-% Based on the second law of information dynamics disclosed in
+% Matlab script to calculate and draw chemical elements' entropy following Hund and Aufbau rule.
+% Based on
 % https://pubs.aip.org/aip/adv/article/13/10/105308/2915332/The-second-law-of-infodynamics-and-its
 % https://www.researchgate.net/publication/374752685_Shannon_Entropy_of_Chemical_Elements
-% It clearly demonstartes the evolution of information that takes place since Big-Bang. 
 
 % (c) Szymon Lukaszyk
 % licensed under MIT License
 % email: szymon@patent.pl
 % History
-% v1: 16.10.2023
+% v1: 16.10.2023 1st working version
+% v2: 17.10.2023 code simplification
 
-%s
-N = 2;
-Nk=1:N;
-
-% s1=0
-% log2(2)=log2(2)
-
-%log2(Nk) - (N/2)*log2(N/2) - (Nk-N/2).*log2(Nk-N/2)./Nk
-%Ns=2
-%Np=6
-%Nd=10
-%Nf=14
-
-EL={
-%nm Z  conf
-'H' ,1 ,  0;
-'He',2 ,  log2(2);   % 1st break
-'Li',3 ,  log2(2);
-'Be',4 ,  2*log2(2);
-'B', 5 ,  2*log2(2);
-'C', 6 ,  2*log2(2);
-'N', 7 ,  2*log2(2);
-'O', 8 ,  2*log2(2)+(log2(4) - (3/4)*log2(3) - (4-3).*log2(4-3)/4);
-'F', 9 ,  2*log2(2)+(log2(5) - (3/5)*log2(3) - (5-3).*log2(5-3)/5);
-'Ne',10,  3*log2(2);
-'Na',11,  3*log2(2);
-'Mg',12,  4*log2(2);
-'Al',13,  4*log2(2);
-'Si',14,  4*log2(2);
-'P', 15,  4*log2(2);
-'Si',16,  4*log2(2)+(log2(4) - (3/4)*log2(3) - (4-3).*log2(4-3)/4);
-'Cl',17,  4*log2(2)+(log2(5) - (3/5)*log2(3) - (5-3).*log2(5-3)/5);
-'Ar',18,  5*log2(2); % 2nd break
-'K', 19,  5*log2(2);
-'Ca',20,  6*log2(2);
-'Sc',21,  6*log2(2);
-'Ti',22,  6*log2(2);
-'V', 23,  6*log2(2);
-%'Cr',24, 6*log2(2); % Chromium as should be
-'Cr',24,  5*log2(2); % Chromium exception
-'Mn',25,  6*log2(2);
-'Fe',26,  6*log2(2)+(log2(6) - (5/6)*log2(5) - (6-5)*log2(6-5)/6);
-'Co',27,  6*log2(2)+(log2(7) - (5/7)*log2(5) - (7-5)*log2(7-5)/7);
-'Ni',28,  6*log2(2)+(log2(8) - (5/8)*log2(5) - (8-5)*log2(8-5)/8); % [Ar] 3d8 4s2 Nickel Aufbau
-%'Ni',28, 5*log2(2)+(log2(9) - (5/9) *log2(5) - (9-5) *log2(9-5)/9); % [Ar] 3d9 4s1 Nickel atomic
-%'Cu',29, 6*log2(2)+(log2(9) - (5/9)*log2(5) - (9-5)*log2(9-5)/9);  % Copper as should be
-'Cu',29,  6*log2(2); % Copper exception [Ar]+3d10+4s1
-'Zn',30,  7*log2(2);
-'Ga',31,  7*log2(2);
-'Ge',32,  7*log2(2);
-'As',33,  7*log2(2);
-'Se',34,  7*log2(2)+(log2(4) - (3/4)*log2(3) - (4-3).*log2(4-3)/4);
-'Br',35,  7*log2(2)+(log2(5) - (3/5)*log2(3) - (5-3).*log2(5-3)/5);
-'Kr',36,  8*log2(2); % 3rd break
-'Rb',37,  8*log2(2); 
-'Sr',38,  9*log2(2);
-'Y', 39,  9*log2(2);
-'Zr',40,  9*log2(2);
-'Nb',41,  9*log2(2); % exc
-'Mo',42,  9*log2(2); % exc
-'Tc',43,  9*log2(2);
-'Ru',44,  8*log2(2)+(log2(7) - (5/7)*log2(5) - (7-5)*log2(7-5)/7); % exc
-'Rh',45,  8*log2(2)+(log2(8) - (5/8)*log2(5) - (8-5)*log2(8-5)/8); % exc
-'Pd',46,  9*log2(2); % exc
-'Ag',47,  9*log2(2); % exc
-'Cd',48,  10*log2(2);
-'In',49,  10*log2(2);
-'Sn',50,  10*log2(2);
-'Sb',51,  10*log2(2);
-'Te',52,  10*log2(2)+(log2(4) - (3/4)*log2(3) - (4-3).*log2(4-3)/4);
-'I', 53,  10*log2(2)+(log2(5) - (3/5)*log2(3) - (5-3).*log2(5-3)/5);
-'Xe',54,  11*log2(2); % 4th break
-'Cs',55,  11*log2(2);
-'Ba',56,  12*log2(2);
-'La',57,  12*log2(2); % exc
-'Ce',58,  12*log2(2); % exc
-'Pr',59,  12*log2(2);
-'Nd',60,  12*log2(2);
-'Pm',61,  12*log2(2);
-'Sm',62,  12*log2(2);
-'Eu',63,  12*log2(2);
-'Gd',64,  12*log2(2); % exc
-'Tb',65,  12*log2(2)+(log2(9) - (7/9) *log2(7) - (9-7) *log2(9-7)/9);
-'Dy',66,  12*log2(2)+(log2(10)- (7/10)*log2(7) - (10-7)*log2(10-7)/10);
-'Ho',67,  12*log2(2)+(log2(11)- (7/11)*log2(7) - (11-7)*log2(11-7)/11);
-'Er',68,  12*log2(2)+(log2(12)- (7/12)*log2(7) - (12-7)*log2(12-7)/12);
-'Tm',69,  12*log2(2)+(log2(13)- (7/13)*log2(7) - (13-7)*log2(13-7)/13);
-'Yb',70,  13*log2(2);
-'Lu',71,  13*log2(2);
-'Hf',72,  13*log2(2);
-'Ta',73,  13*log2(2);
-'W', 74,  13*log2(2);
-'Re',75,  13*log2(2);
-'Os',76,  13*log2(2)+(log2(6) - (5/6)*log2(5) - (6-5)*log2(6-5)/6);
-'Ir',77,  13*log2(2)+(log2(7) - (5/7)*log2(5) - (7-5)*log2(7-5)/7);
-'Pt',78,  13*log2(2)+(log2(8) - (5/8)*log2(5) - (8-5)*log2(8-5)/8); % exc
-'Au',79,  13*log2(2); % exc
-'Hg',80,  14*log2(2);
-'Tl',81,  14*log2(2);
-'Pb',82,  14*log2(2);
-'Bi',83,  14*log2(2);
-'Po',84,  14*log2(2)+(log2(4) - (3/4)*log2(3) - (4-3).*log2(4-3)/4);
-'At',85,  14*log2(2)+(log2(5) - (3/5)*log2(3) - (5-3).*log2(5-3)/5);
-'Rn',86,  15*log2(2); % 5th break
-'Fr',87,  15*log2(2);
-'Ra',88,  16*log2(2);
-'Ac',89,  16*log2(2); % exc
-'Th',90,  16*log2(2); % exc
-'Pa',91,  16*log2(2); % exc
-'U', 92   16*log2(2); % exc
-'Np',93,  16*log2(2); % exc
-'Pu',94,  16*log2(2);
-'Am',95,  16*log2(2);
-'Cm',96,  16*log2(2); % exc
-'Bk',97,  16*log2(2)+(log2(9) - (7/9) *log2(7) - (9-7) *log2(9-7)/9);
-'Cf',98,  16*log2(2)+(log2(10)- (7/10)*log2(7) - (10-7)*log2(10-7)/10);
-'Es',99,  16*log2(2)+(log2(11)- (7/11)*log2(7) - (11-7)*log2(11-7)/11);
-'Fm',100, 16*log2(2)+(log2(12)- (7/12)*log2(7) - (12-7)*log2(12-7)/12);
-'Md',101, 16*log2(2)+(log2(13)- (7/13)*log2(7) - (13-7)*log2(13-7)/13);
-'No',102, 17*log2(2);
-'Lf',103, 17*log2(2); % exc
-'Rf',104, 17*log2(2);
-'Db',105, 17*log2(2);
-'Sg',106, 17*log2(2);
-'Bh',107, 17*log2(2);
-'Hs',108, 17*log2(2)+(log2(6) - (5/6)*log2(5) - (6-5)*log2(6-5)/6);
-'Mt',109, 17*log2(2)+(log2(7) - (5/7)*log2(5) - (7-5)*log2(7-5)/7);
-'Ds',110, 17*log2(2)+(log2(8) - (5/8)*log2(5) - (8-5)*log2(8-5)/8);
-'Rg',111, 17*log2(2)+(log2(9) - (5/9)*log2(5) - (9-5)*log2(9-5)/9);
-'Cn',112, 18*log2(2);
-'Nh',113, 18*log2(2);
-'Fl',114, 18*log2(2);
-'Mc',115, 18*log2(2);
-'Lv',116, 18*log2(2)+(log2(4) - (3/4)*log2(3) - (4-3).*log2(4-3)/4);
-'Ts',117, 18*log2(2)+(log2(5) - (3/5)*log2(3) - (5-3).*log2(5-3)/5);
-'Og',118, 19*log2(2)};
+%-1 in 'auf_conf' means that 'auf_conf' is the same as 'act_conf'
+EL={ 
+%nm, Z,   H_act_conf,                                                 H_auf_conf, comments,     act_conf#TODO#, auf_conf#TODO#
+'H' ,1 ,  0,                                                          -1,      'hydrogen_has_zero_entropy';
+'He',2 ,  log2(2),                                                    -1,      '1st_break';
+'Li',3 ,  log2(2),                                                    -1,      'NONE';
+'Be',4 ,  2*log2(2),                                                  -1,      'NONE';
+'B', 5 ,  2*log2(2),                                                  -1,      'NONE';
+'C', 6 ,  2*log2(2),                                                  -1,      'NONE';
+'N', 7 ,  2*log2(2),                                                  -1,      'NONE';
+'O', 8 ,  2*log2(2)+(log2(4) - (3/4)*log2(3) - (4-3).*log2(4-3)/4),   -1,      'NONE';
+'F', 9 ,  2*log2(2)+(log2(5) - (3/5)*log2(3) - (5-3).*log2(5-3)/5),   -1,      'NONE';
+'Ne',10,  3*log2(2),                                                  -1,      'NONE';
+'Na',11,  3*log2(2),                                                  -1,      'NONE';
+'Mg',12,  4*log2(2),                                                  -1,      'NONE';
+'Al',13,  4*log2(2),                                                  -1,      'NONE';
+'Si',14,  4*log2(2),                                                  -1,      'NONE';
+'P', 15,  4*log2(2),                                                  -1,      'NONE';
+'Si',16,  4*log2(2)+(log2(4) - (3/4)*log2(3) - (4-3).*log2(4-3)/4),   -1,      'NONE';
+'Cl',17,  4*log2(2)+(log2(5) - (3/5)*log2(3) - (5-3).*log2(5-3)/5),   -1,      'NONE';
+'Ar',18,  5*log2(2),                                                  -1,      '2nd_break';
+'K', 19,  5*log2(2),                                                  -1,      'NONE';
+'Ca',20,  6*log2(2),                                                  -1,      'NONE';
+'Sc',21,  6*log2(2),                                                  -1,      'NONE';
+'Ti',22,  6*log2(2),                                                  -1,      'NONE';
+'V', 23,  6*log2(2),                                                  -1,      'NONE';
+'Cr',24,  5*log2(2),                                                  6*log2(2), 'Cr_exception';
+'Mn',25,  6*log2(2),                                                  -1,      'NONE';
+'Fe',26,  6*log2(2)+(log2(6) - (5/6)*log2(5) - (6-5)*log2(6-5)/6),    -1,      'NONE';
+'Co',27,  6*log2(2)+(log2(7) - (5/7)*log2(5) - (7-5)*log2(7-5)/7),    -1,      'NONE';
+'Ni',28, 5*log2(2)+(log2(9) - (5/9) *log2(5) - (9-5) *log2(9-5)/9),   6*log2(2)+(log2(8) - (5/8)*log2(5) - (8-5)*log2(8-5)/8), 'Ni disputed exception'; % [Ar] 3d8 4s2 % [Ar] 3d9 4s1 Nickel atomic
+'Cu',29,  6*log2(2),                                                  6*log2(2)+(log2(9) - (5/9)*log2(5) - (9-5)*log2(9-5)/9),  'Cu_exception';% [Ar]+3d10+4s1
+'Zn',30,  7*log2(2),                                                  -1,      'NONE';
+'Ga',31,  7*log2(2),                                                  -1,      'NONE';
+'Ge',32,  7*log2(2),                                                  -1,      'NONE';
+'As',33,  7*log2(2),                                                  -1,      'NONE';
+'Se',34,  7*log2(2)+(log2(4) - (3/4)*log2(3) - (4-3).*log2(4-3)/4),   -1,      'NONE';
+'Br',35,  7*log2(2)+(log2(5) - (3/5)*log2(3) - (5-3).*log2(5-3)/5),   -1,      'NONE';
+'Kr',36,  8*log2(2),                                                  -1,      '3rd_break';
+'Rb',37,  8*log2(2),                                                  -1,      'NONE'; 
+'Sr',38,  9*log2(2),                                                  -1,      'NONE';
+'Y', 39,  9*log2(2),                                                  -1,      'NONE';
+'Zr',40,  9*log2(2),                                                  -1,      'NONE';
+'Nb',41,  9*log2(2),                                                  8*log2(2)+log2(2),      'Nb exception';
+'Mo',42,  9*log2(2),                                                  8*log2(2)+log2(2),      'Mo exception';
+'Tc',43,  9*log2(2),                                                  -1,      'NONE';
+'Ru',44,  8*log2(2)+(log2(7) - (5/7)*log2(5) - (7-5)*log2(7-5)/7),    8*log2(2)+log2(2)+(log2(6) - (5/6) *log2(5) - (6-5) *log2(6-5)/6),      'Ru exception';
+'Rh',45,  8*log2(2)+(log2(8) - (5/8)*log2(5) - (8-5)*log2(8-5)/8),    8*log2(2)+log2(2)+(log2(7) - (5/7) *log2(5) - (7-5) *log2(7-5)/7),      'Rh exception';
+'Pd',46,  9*log2(2),                                                  8*log2(2)+log2(2)+(log2(8) - (5/8) *log2(5) - (8-5) *log2(8-5)/8),      'Pd exception';
+'Ag',47,  9*log2(2),                                                  8*log2(2)+log2(2)+(log2(9) - (5/9) *log2(5) - (9-5) *log2(9-5)/9),      'Ag exception';
+'Cd',48,  10*log2(2),   -1,      'NONE';
+'In',49,  10*log2(2),   -1,      'NONE';
+'Sn',50,  10*log2(2),   -1,      'NONE';
+'Sb',51,  10*log2(2),   -1,      'NONE';
+'Te',52,  10*log2(2)+(log2(4) - (3/4)*log2(3) - (4-3).*log2(4-3)/4),                                                -1,      'NONE';
+'I', 53,  10*log2(2)+(log2(5) - (3/5)*log2(3) - (5-3).*log2(5-3)/5),                                                -1,      'NONE';
+'Xe',54,  11*log2(2),   -1,      '4th break';
+'Cs',55,  11*log2(2),   -1,      'NONE';
+'Ba',56,  12*log2(2),   -1,      'NONE';
+'La',57,  12*log2(2),   11*log2(2)+log2(2),      'La exception';
+'Ce',58,  12*log2(2),   11*log2(2)+log2(2),      'Ce exception';
+'Pr',59,  12*log2(2),   -1,      'NONE';
+'Nd',60,  12*log2(2),   -1,      'NONE';
+'Pm',61,  12*log2(2),   -1,      'NONE';
+'Sm',62,  12*log2(2),   -1,      'NONE';
+'Eu',63,  12*log2(2),   -1,      'NONE';
+'Gd',64,  12*log2(2),   11*log2(2)+log2(2)+(log2(8) - (7/8) *log2(7) - (8-7) *log2(8-7)/8),      'Gd exception';
+'Tb',65,  12*log2(2)+(log2(9) - (7/9) *log2(7) - (9-7) *log2(9-7)/9),   -1,      'NONE';
+'Dy',66,  12*log2(2)+(log2(10)- (7/10)*log2(7) - (10-7)*log2(10-7)/10),   -1,      'NONE';
+'Ho',67,  12*log2(2)+(log2(11)- (7/11)*log2(7) - (11-7)*log2(11-7)/11),   -1,      'NONE';
+'Er',68,  12*log2(2)+(log2(12)- (7/12)*log2(7) - (12-7)*log2(12-7)/12),   -1,      'NONE';
+'Tm',69,  12*log2(2)+(log2(13)- (7/13)*log2(7) - (13-7)*log2(13-7)/13),   -1,      'NONE';
+'Yb',70,  13*log2(2),   -1,      'NONE';
+'Lu',71,  13*log2(2),   -1,      'NONE';
+'Hf',72,  13*log2(2),   -1,      'NONE';
+'Ta',73,  13*log2(2),   -1,      'NONE';
+'W', 74,  13*log2(2),   -1,      'NONE';
+'Re',75,  13*log2(2),   -1,      'NONE';
+'Os',76,  13*log2(2)+(log2(6) - (5/6)*log2(5) - (6-5)*log2(6-5)/6),   -1,      'NONE';
+'Ir',77,  13*log2(2)+(log2(7) - (5/7)*log2(5) - (7-5)*log2(7-5)/7),   -1,      'NONE';
+'Pt',78,  13*log2(2)+(log2(8) - (5/8)*log2(5) - (8-5)*log2(8-5)/8),   11*log2(2)+log2(2)+log2(2)+(log2(8) - (5/8) *log2(5) - (8-5) *log2(8-5)/8),      'Pt exception';
+'Au',79,  13*log2(2),   11*log2(2)+log2(2)+log2(2)+(log2(9) - (5/9) *log2(5) - (9-5) *log2(9-5)/9),      'Au exception';
+'Hg',80,  14*log2(2),   -1,      'NONE';
+'Tl',81,  14*log2(2),   -1,      'NONE';
+'Pb',82,  14*log2(2),   -1,      'NONE';
+'Bi',83,  14*log2(2),   -1,      'NONE';
+'Po',84,  14*log2(2)+(log2(4) - (3/4)*log2(3) - (4-3).*log2(4-3)/4),   -1,      'NONE';
+'At',85,  14*log2(2)+(log2(5) - (3/5)*log2(3) - (5-3).*log2(5-3)/5),   -1,      'NONE';
+'Rn',86,  15*log2(2),   -1,      '5th break';
+'Fr',87,  15*log2(2),   -1,      'NONE';
+'Ra',88,  16*log2(2),   -1,      'NONE';
+'Ac',89,  16*log2(2),   15*log2(2)+log2(2),      'Ac exception';
+'Th',90,  16*log2(2),   15*log2(2)+log2(2),      'Th exception';
+'Pa',91,  16*log2(2),   15*log2(2)+log2(2),      'Pa exception';
+'U', 92   16*log2(2),   15*log2(2)+log2(2),      'U exception';
+'Np',93,  16*log2(2),   15*log2(2)+log2(2),      'Np exception';
+'Pu',94,  16*log2(2),   -1,      'NONE';
+'Am',95,  16*log2(2),   -1,      'NONE';
+'Cm',96,  16*log2(2),   15*log2(2)+log2(2)+(log2(9) - (7/9) *log2(7) - (9-7) *log2(9-7)/9),      'Cm exception';
+'Bk',97,  16*log2(2)+(log2(9) - (7/9) *log2(7) - (9-7) *log2(9-7)/9),   -1,      'NONE';
+'Cf',98,  16*log2(2)+(log2(10)- (7/10)*log2(7) - (10-7)*log2(10-7)/10),   -1,      'NONE';
+'Es',99,  16*log2(2)+(log2(11)- (7/11)*log2(7) - (11-7)*log2(11-7)/11),   -1,      'NONE';
+'Fm',100, 16*log2(2)+(log2(12)- (7/12)*log2(7) - (12-7)*log2(12-7)/12),   -1,      'NONE';
+'Md',101, 16*log2(2)+(log2(13)- (7/13)*log2(7) - (13-7)*log2(13-7)/13),   -1,      'NONE';
+'No',102, 17*log2(2),   -1,      'NONE';
+'Lf',103, 17*log2(2),   15*log2(2)+log2(2)+log2(2),      'Lf exception';
+'Rf',104, 17*log2(2),   -1,      'NONE';
+'Db',105, 17*log2(2),   -1,      'NONE';
+'Sg',106, 17*log2(2),   -1,      'NONE';
+'Bh',107, 17*log2(2),   -1,      'NONE';
+'Hs',108, 17*log2(2)+(log2(6) - (5/6)*log2(5) - (6-5)*log2(6-5)/6),   -1,      'NONE';
+'Mt',109, 17*log2(2)+(log2(7) - (5/7)*log2(5) - (7-5)*log2(7-5)/7),   -1,      'NONE';
+'Ds',110, 17*log2(2)+(log2(8) - (5/8)*log2(5) - (8-5)*log2(8-5)/8),   17*log2(2) + (log2(9) - (5/9) *log2(5) - (9-5) *log2(9-5)/9),      'NONE';
+'Rg',111, 17*log2(2)+(log2(9) - (5/9)*log2(5) - (9-5)*log2(9-5)/9),   17*log2(2) + log2(2),      'NONE';
+'Cn',112, 18*log2(2),   -1,      'NONE';
+'Nh',113, 18*log2(2),   -1,      'NONE';
+'Fl',114, 18*log2(2),   -1,      'NONE';
+'Mc',115, 18*log2(2),   -1,      'NONE';
+'Lv',116, 18*log2(2)+(log2(4) - (3/4)*log2(3) - (4-3).*log2(4-3)/4),   -1,      'NONE';
+'Ts',117, 18*log2(2)+(log2(5) - (3/5)*log2(3) - (5-3).*log2(5-3)/5),   -1,      'NONE';
+'Og',118, 19*log2(2),   -1,      'NONE'
+};
 
 for k=1:size(EL, 1)
   ZZ(k) = EL{k,2};
   HH(k) = EL{k,3};  
+  if EL{k,4} == -1
+    HHH(k)= EL{k,3};
+    dfc(k)=0;
+  else
+    HHH(k)= EL{k,4};
+    dfc(k)=1;    
+  end    
 end  
+
+figure
+hold on
+grid on
+linew=1;
+plot(ZZ,HHH, 'r','LineWidth',linew)
+plot(ZZ,HH, 'g','LineWidth',linew)
+%plot(NiLineZ,NiLineen, 'g:','LineWidth',linew)
+set(gca,'FontName', 'Times New Roman')
+set(gca,'FontSize', 9)
+xlabel('Atomic number')
+ylabel('Shannon entropy (bits)')
+axis([0 118 0 19]) % bits
+
+for k=1:size(EL, 1)
+  if HH(k) ~= HHH(k) % draw Aufbau rule violations with different entropy
+     plot(ZZ(k), HHH(k),'rx','LineWidth',linew)
+     plot(ZZ(k), HH(k),'gx','LineWidth',linew)
+  else              % draw Aufbau rule violations with the same entropy
+    if dfc(k) ~= 0
+      plot(ZZ(k), HH(k),'rx','LineWidth',linew)
+      plot(ZZ(k), HH(k),'b+','LineWidth',linew)  
+    end  
+  end
+end  
+
+return
 
 %s1 = 0;                                                            Ss1=1
 %s2 = log2(2);                                                      Ss2=0
@@ -178,159 +198,7 @@ end
 %f13= (log2(13)- (7/13)*log2(7) - (13-7)*log2(13-7)/13)             Sf8=1 
 %f14= (log2(14)- (7/14)*log2(7) - (14-7)*log2(14-7)/14) = log2(2)   Sf8=0
 
-% Chromium exception 24
-%[Ar]+3d3+4s2, [Ar]+3d5+4s1, [Ar]+3d5+4s2
-%instead of
-%[Ar]+3d3+4s2, [Ar]+3d4+4s2, [Ar]+3d5+4s2
-% Cr_exc = [Ar]+3d4+4s2 = 5*log2(2) + 0 + log2(2) % Chromium as should be
-Cr_exc = 6*log2(2);
-
-%28 Nickel exception [Ar]+3d9+4s1
-Ni_exc = 6*log2(2)+(log2(8) - (5/8)*log2(5) - (8-5)*log2(8-5)/8);
-
-% Copper exception 29
-%[Ar]+3d8+4s2, [Ar]+3d10+4s1, [Ar]+3d10+4s2
-%instead of
-%[Ar]+3d8+4s2, [Ar]+3d9+4s2, [Ar]+3d10+4s2
-%Cu_exc = [Ar]+3d9+4s2 = 5*log2(2) + (log2(9) - (5/9) *log2(5) - (9-5) *log2(9-5)/9) + log2(2) % Copper as should be
-Cu_exc = 6*log2(2)+(log2(9) - (5/9)*log2(5) - (9-5)*log2(9-5)/9);  
-
-%41[Kr]+5s2+4d3
-Nb_exc = 8*log2(2)+log2(2);
-%42[Kr]+5s2+4d4
-Mo_exc = 8*log2(2)+log2(2);
-%44[Kr]+5s2+4d6
-Ru_exc = 8*log2(2)+log2(2)+(log2(6) - (5/6) *log2(5) - (6-5) *log2(6-5)/6);
-%45[Kr]+5s2+4d7
-Rh_exc = 8*log2(2)+log2(2)+(log2(7) - (5/7) *log2(5) - (7-5) *log2(7-5)/7);
-%46[Kr]+5s2+4d8
-Pd_exc = 8*log2(2)+log2(2)+(log2(8) - (5/8) *log2(5) - (8-5) *log2(8-5)/8);
-%47[Kr]+5s2+4d9
-Ag_exc = 8*log2(2)+log2(2)+(log2(9) - (5/9) *log2(5) - (9-5) *log2(9-5)/9);
-%57[Xe]+6s2+4f1
-La_exc = 11*log2(2)+log2(2)+0;
-%58[Xe]+6s2+4f2
-Ce_exc = 11*log2(2)+log2(2)+0;
-%64[Xe]+6s2+4f8
-Gd_exc = 11*log2(2)+log2(2)+(log2(8) - (7/8) *log2(7) - (8-7) *log2(8-7)/8);
-%78[Xe]+6s2+4f14+5d8
-Pt_exc = 11*log2(2)+log2(2)+log2(2)+(log2(8) - (5/8) *log2(5) - (8-5) *log2(8-5)/8);
-%79[Xe]+6s2+4f14+5d9
-Au_exc = 11*log2(2)+log2(2)+log2(2)+(log2(9) - (5/9) *log2(5) - (9-5) *log2(9-5)/9);
-%89[Rn]+7s2+5f1
-Ac_exc = 15*log2(2)+log2(2);
-%90[Rn]+7s2+5f2
-Th_exc = 15*log2(2)+log2(2);
-%91[Rn]+7s2+5f3
-Pa_exc = 15*log2(2)+log2(2);
-%92[Rn]+7s2+5f4
-U_exc = 15*log2(2)+log2(2);
-%93[Rn]+7s2+5f5
-Np_exc = 15*log2(2)+log2(2);
-%96[Rn]+7s2+5f8
-Cm_exc = 15*log2(2)+log2(2)+(log2(9) - (7/9) *log2(7) - (9-7) *log2(9-7)/9);
-%103[Rn]+7s2+5f14+6d1
-Lf_exc = 15*log2(2)+log2(2)+log2(2);
-
-%110
-Ds_exc = 17*log2(2) + (log2(9) - (5/9) *log2(5) - (9-5) *log2(9-5)/9); % .	110	*[Rn]f14d9s1   
-%111
-Rg_exc = 17*log2(2) + log2(2); % 111	*[Rn]f14d10s1  
-
-HHH = HH;
-HHH(24)=Cr_exc;
-%HHH(28)=Ni_exc;
-HHH(29)=Cu_exc;
-HHH(41)=Nb_exc;
-HHH(42)=Mo_exc;
-HHH(44)=Ru_exc;
-HHH(45)=Rh_exc;
-HHH(46)=Pd_exc;
-HHH(47)=Ag_exc;
-HHH(57)=La_exc;
-HHH(58)=Ce_exc;
-HHH(64)=Gd_exc;
-HHH(78)=Pt_exc;
-HHH(79)=Au_exc;
-HHH(89)=Ac_exc;
-HHH(90)=Th_exc;
-HHH(91)=Pa_exc;
-HHH(92)=U_exc;
-HHH(93)=Np_exc;
-HHH(96)=Cm_exc;
-HHH(103)=Lf_exc;
-
-% Nickel
-%'Ni',28, 5*log2(2)+(log2(9) - (5/9) *log2(5) - (9-5) *log2(9-5)/9); % [Ar] 3d9 4s1 Nickel atomic
-Niat28 = 5*log2(2)+(log2(9) - (5/9) *log2(5) - (9-5) *log2(9-5)/9);
-
-NiLineZ = [27     28     29]; 
-NiLineen= [HH(27) Niat28 Cu_exc];
-
-figure
-hold on
-grid on
-linew=1;
-plot(ZZ,HHH, 'r','LineWidth',linew)
-plot(ZZ,HH, 'g','LineWidth',linew)
-plot(NiLineZ,NiLineen, 'g:','LineWidth',linew)
-set(gca,'FontName', 'Times New Roman')
-set(gca,'FontSize', 9)
-xlabel('Atomic number')
-ylabel('Shannon entropy (bits)')
-axis([0 118 0 19]) % bits
-
-%plot(110, Ds_exc, 'co')
-%plot(111, Rg_exc, 'co')
-
-%line([43   43], [0 19], 'Color',[0 0 0], 'LineStyle', '-.');
-%line([48   48], [0 19], 'Color',[0 0 0], 'LineStyle', '-.');
-
-plot(24, Cr_exc,'rx','LineWidth',linew)
-plot(24, HH(24),'gx','LineWidth',linew)
-%plot(28, Ni_exc,'rx','LineWidth',linew)
-plot(29, Cu_exc,'rx','LineWidth',linew)
-plot(29, HH(29),'gx','LineWidth',linew)
-plot(41, Nb_exc,'rx','LineWidth',linew)
-plot(42, Mo_exc,'rx','LineWidth',linew)
-plot(44, Ru_exc,'rx','LineWidth',linew)
-plot(44, HH(44),'gx','LineWidth',linew)
-plot(45, Rh_exc,'rx','LineWidth',linew)
-plot(45, HH(45),'gx','LineWidth',linew)
-%plot(46, Pd_exc,'rx','LineWidth',linew)
-plot(46, Pd_exc,'ro','LineWidth',linew)
-plot(46, HH(46),'go','LineWidth',linew)
-plot(47, Ag_exc,'rx','LineWidth',linew)
-plot(47, HH(47),'gx','LineWidth',linew)
-plot(57, La_exc,'rx','LineWidth',linew)
-plot(58, Ce_exc,'rx','LineWidth',linew)
-plot(64, Gd_exc,'rx','LineWidth',linew)
-plot(64, HH(64),'gx','LineWidth',linew)
-plot(78, Pt_exc,'rx','LineWidth',linew)
-plot(79, Au_exc,'rx','LineWidth',linew)
-plot(79, HH(79),'gx','LineWidth',linew)
-plot(89, Ac_exc,'rx','LineWidth',linew)
-plot(90, Th_exc,'rx','LineWidth',linew)
-plot(91, Pa_exc,'rx','LineWidth',linew)
-plot(92, U_exc,'rx','LineWidth' ,linew)
-plot(93, Np_exc,'rx','LineWidth',linew)
-plot(96, Cm_exc,'rx','LineWidth',linew)
-plot(96, HH(96),'gx','LineWidth',linew)
-plot(103,Lf_exc,'rx','LineWidth',linew)
-
-%draw points with the same entropy
-plot(41, Nb_exc,'b+','LineWidth',linew)
-plot(42, Mo_exc,'b+','LineWidth',linew)
-plot(57, La_exc,'b+','LineWidth',linew)
-plot(58, Ce_exc,'b+','LineWidth',linew)
-plot(78, Pt_exc,'b+','LineWidth',linew)
-plot(89, Ac_exc,'b+','LineWidth',linew)
-plot(90, Th_exc,'b+','LineWidth',linew)
-plot(91, Pa_exc,'b+','LineWidth',linew)
-plot(92, U_exc, 'b+','LineWidth',linew)
-plot(93, Np_exc,'b+','LineWidth',linew)
-plot(103,Lf_exc,'b+','LineWidth',linew)
-
+% simplified formulas verification
 % Z S_act S_Auf H_act H_Auf
 TabEx= [24  6 4 5 *log2(2)                         6*log2(2);
         28  2 2  log2(2^(37/9) * 3^2 * 5^(-5/9))   log2(2^9 * 3^(-3/8) * 5^(-5/8) );
@@ -356,10 +224,3 @@ TabEx= [24  6 4 5 *log2(2)                         6*log2(2);
 
 %plot( TabEx(:,1),  TabEx(:,4), 'bo','LineWidth',linew) %act
 %plot( TabEx(:,1),  TabEx(:,5), 'c+','LineWidth',linew) %Auf
-
-%        28  2 2 (37/9)*log2(2)+2*log2(3) - (5/9) *log2(5)              9*log2(2) - (5/8)*log2(5) - (3/8)*log2(3);
-%        29	1 1 6 *log2(2)                                             (46/9)*log2(2) + 2*log2(3) - (5/9)*log2(5);
-%        44	4 4 (54/7)*log2(2) + log2(7) - (5/7)*log2(5)               10*log2(2) + log2(3) - (5/6)*log2(5);
-
-
-
