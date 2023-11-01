@@ -4,6 +4,7 @@ clear all
 % Based on
 % https://pubs.aip.org/aip/adv/article/13/10/105308/2915332/The-second-law-of-infodynamics-and-its
 % https://www.preprints.org/manuscript/202310.1112
+% https://www.researchgate.net/publication/374752685_Shannon_Entropy_of_Chemical_Elements
 
 % (c) Szymon Lukaszyk
 % licensed under MIT License
@@ -15,16 +16,16 @@ clear all
 % v3: 18.10.2023 automatic value generation (TODO: Aufbau exceptions)
 % v4: 28.10.2023 A167268 and A216607 sequences
 
-nmax=19; %19 = regular table  2900; 
+nmax=5000; %19 = regular table  2900; 
 n=1:nmax;
 
-%otab = 4*mod(-n, round(sqrt(n))) + 2; % OEIS A167268 sequence
-otab = 4*(floor( ceil( sqrt(4*n) ).^2/4 ) - n) + 2; % OEIS A216607 sequence
+otab1 = 4*(floor( ceil( sqrt(4*n) ).^2/4 ) - n) + 2;   % OEIS A167268 and A216607 sequences
+otab2 = 4*(-floor(-(1/4)*ceil(sqrt(4*n)).^2) - n) + 2; % OEIS A167268 and A366932 sequences
 
 Z = 1; % Zmin
-for k=1:length(otab)
-    for N = 1:otab(k)
-        Normax = otab(k);
+for k=1:length(otab1)
+    for N = 1:otab1(k)
+        Normax = otab1(k);
         EL(Z, 1) = Z;
         EL(Z, 3) = (k-1)*log2(2);      % core entropy
         if N <= Normax/2
@@ -33,7 +34,25 @@ for k=1:length(otab)
             EL(Z, 2) = (Normax-N)/2; % spin multiplicity
             EL(Z, 3) = EL(Z, 3) + log2(N) - (Normax/2)*log2(Normax/2)/N - (N-Normax/2)*log2(N-Normax/2)/N;  % surplus entropy
         end            
-        EL(Z, 4) = otab(k);            % entropy multiplicity
+        EL(Z, 4) = otab1(k);            % entropy multiplicity
+        Z = Z + 1;
+    end
+end
+
+% a hypothesis
+Z = 1; % Zmin
+for k=1:length(otab2)
+    for N = 1:otab2(k)
+        Normax = otab2(k);
+        EL3(Z, 1) = Z;
+        EL3(Z, 3) = (k-1)*log2(2);      % core entropy
+        if N <= Normax/2
+            EL3(Z, 2) = N/2;             % spin multiplicity
+        else
+            EL3(Z, 2) = (Normax-N)/2; % spin multiplicity
+            EL3(Z, 3) = EL3(Z, 3) + log2(N) - (Normax/2)*log2(Normax/2)/N - (N-Normax/2)*log2(N-Normax/2)/N;  % surplus entropy
+        end            
+        EL3(Z, 4) = otab2(k);            % entropy multiplicity
         Z = Z + 1;
     end
 end
@@ -68,7 +87,6 @@ ELexc=[
 103,	1, 17*s2];%			1;				17*s2,	    'exc',		
 
 EL2=EL;
-
 idx=1;
 for k=1:size(EL, 1)
     if EL(k,1) == ELexc(idx,1) 
@@ -81,7 +99,7 @@ for k=1:size(EL, 1)
     end
 end
 
-drawspin    = 1;
+drawspin    = 0;
 drawentropy = 1;
 
 if drawspin
@@ -91,21 +109,22 @@ if drawspin
     linew=1;
     plot(EL2(:, 1), EL2(:, 2), 'g', 'LineWidth', linew) %exceptions
     plot(EL(:, 1), EL(:, 2), 'r', 'LineWidth', linew)
+    plot(EL3(:, 1), EL3(:, 2), 'b', 'LineWidth', linew)
     set(gca,'FontName', 'Times New Roman')
     set(gca,'FontSize', 12)
     xlabel('Atomic number')
     ylabel('Spin multiplicity')
     axis([2 max(EL2(:,1)) 0  max(EL2(:,2))])    
-
+%{
     % draw noble gases lines
     ngline = 0;
-    for k=1:length(otab)
-        if otab(k) == 2
-            line([ngline ngline], [0 max(EL(:,2))], 'Color',[0 0 0], 'LineStyle', '-.');    
+    for k=1:length(otab1)
+        if otab1(k) == 2
+            line([ngline ngline], [0 max(EL2(:,2))], 'Color',[0 0 0], 'LineStyle', '-.');    
         end
-        ngline = ngline + otab(k);            
+        ngline = ngline + otab1(k);            
     end
-
+%}
     % draw exceptions
      for k=1:size(ELexc,1)
          plot(ELexc(k, 1), ELexc(k, 2)/2, 'gx','LineWidth',linew)        
@@ -124,25 +143,27 @@ if drawentropy
     linew=1;
     plot(EL2(:, 1),EL2(:, 3), 'g','LineWidth',linew) %exceptions    
     plot(EL(:, 1),EL(:, 3), 'r','LineWidth',linew)    
+    plot(EL3(:, 1),EL3(:, 3), 'b','LineWidth',linew)        
     set(gca,'FontName', 'Times New Roman')
     set(gca,'FontSize', 12)
     xlabel('Atomic number')
     ylabel('Shannon entropy (bits)')
-    axis([1 max(EL(:,1)) 0  max(EL(:,3))])
-
+    %axis([1 max(EL(:,1)) 0  max(EL(:,3))])
+%{
     % draw noble gases lines
     ngline = 0;
-    for k=1:length(otab)
-        if otab(k) == 2
+    for k=1:length(otab1)
+        if otab1(k) == 2
             line([ngline ngline], [0 max(EL(:,3))], 'Color',[0 0 0], 'LineStyle', '-.');
         end
-        ngline = ngline + otab(k);        
+        ngline = ngline + otab1(k);        
     end
-
+%}
     % draw exceptions
      for k=1:size(ELexc,1)
          plot(ELexc(k, 1), ELexc(k, 3), 'gx','LineWidth',linew)        
      end
+%{
     % draw approximations
      %for k=1.5:0.01:1.6   
      %for k=1.542:0.001:1.545        
@@ -151,4 +172,5 @@ if drawentropy
         ff = (EL(:, 1)-1).^log2(2);
         plot(EL(:, 1), ff, 'b','LineWidth',linew)        
      %end
+%}     
 end
